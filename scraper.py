@@ -1,6 +1,7 @@
 import re
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
+from collections import defaultdict
 
 stop_words = ['a', 'about', 'above', 'after', 'again', 'against', 'all', 'am', 'an', 'and', 'any', 'are', "aren't",
               'as', 'at', 'be', 'because', 'been', 'before', 'being', 'below', 'between', 'both', 'but', 'by',
@@ -18,6 +19,8 @@ stop_words = ['a', 'about', 'above', 'after', 'again', 'against', 'all', 'am', '
               'whom', 'why', "why's", 'with', "won't", 'would', "wouldn't", 'you', "you'd", "you'll", "you're",
               "you've", 'your', 'yours', 'yourself', 'yourselves']
 
+subdomain_pages = defaultdict(int)
+
 def scraper(url, resp):
     links = extract_next_links(url, resp)
     return [link for link in links if is_valid(link)]
@@ -32,15 +35,27 @@ def extract_next_links(url, resp):
     #         resp.raw_response.url: the url, again
     #         resp.raw_response.content: the content of the page!
     # Return a list with the hyperlinks (as strings) scrapped from resp.raw_response.content
-    if resp.status == 200:
+    unique_links = set()
+    if resp.status == 200 and resp.raw_response.content:  # check the status code is ok and the content is not empty
         soup = BeautifulSoup(resp.raw_response.content, 'html.parser')
-        alnum_tokens = re.split(r"[^a-zA-Z]+", soup.getText())
-        filtered_tokens = [token.lower() for token in alnum_tokens if token and token.lower() not in stop_words]
-        print(filtered_tokens)
+        eng_tokens = re.findall(r'\b[a-zA-Z][a-zA-Z\']*[a-zA-Z]\b', soup.getText())
+        filtered_tokens = [token.lower() for token in eng_tokens if token and token.lower() not in stop_words]
+        
+        if in_ics_domain(url):  # how many page in subdomain
+            subdomain_pages[urlparse(url).hostname] += 1
+        
+        links = soup.find_all('a')  # get all the url tag in the page
+        for link in links:
+            if link.get('href'):   # get the url inside the tage
+                unique_links.add(link.get('href'))
     else:
         print("ERROR: ", resp.error)
 
-    return list()
+    return list(unique_links)
+
+def in_ics_domain(url):
+    subdomain = urlparse(url)
+    return subdomain and subdomain.hostname.endswith(".ics.uci.edu") and subdomain != "www.ics.uci.edu"
 
 def is_valid(url):
     # Decide whether to crawl this url or not. 
