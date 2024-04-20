@@ -1,5 +1,5 @@
 import re
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urldefrag
 from bs4 import BeautifulSoup
 from collections import defaultdict
 
@@ -21,6 +21,8 @@ stop_words = ['a', 'about', 'above', 'after', 'again', 'against', 'all', 'am', '
 
 subdomain_pages = defaultdict(int)
 
+word_freqs = defaultdict(int)
+
 def scraper(url, resp):
     links = extract_next_links(url, resp)
     return [link for link in links if is_valid(link)]
@@ -35,19 +37,27 @@ def extract_next_links(url, resp):
     #         resp.raw_response.url: the url, again
     #         resp.raw_response.content: the content of the page!
     # Return a list with the hyperlinks (as strings) scrapped from resp.raw_response.content
-    unique_links = set()
-    if resp.status == 200 and resp.raw_response.content:  # check the status code is ok and the content is not empty
+    
+    unique_links = set()  # list of unique links
+    if resp.status == 200 and resp.raw_response.content not in [None, ""]:  # check the status code is ok and the content is not empty
         soup = BeautifulSoup(resp.raw_response.content, 'html.parser')
-        eng_tokens = re.findall(r'\b[a-zA-Z][a-zA-Z\']*[a-zA-Z]\b', soup.getText())
-        filtered_tokens = [token.lower() for token in eng_tokens if token and token.lower() not in stop_words]
+        eng_tokens = re.findall(r'\b[a-zA-Z][a-zA-Z\']*[a-zA-Z]\b', soup.getText())  # tokenize 
+        filtered_tokens = []
+        for token in eng_tokens:
+            if token and token.lower() not in stop_words:  # filter out stop words
+                filtered_tokens.append(token.lower())
+                word_freqs[token.lwower()] += 1     # update word_freq
         
-        if in_ics_domain(url):  # how many page in subdomain
+        if in_ics_domain(url):  # how many links in the domain
             subdomain_pages[urlparse(url).hostname] += 1
         
         links = soup.find_all('a')  # get all the url tag in the page
         for link in links:
             if link.get('href'):   # get the url inside the tage
-                unique_links.add(link.get('href'))
+                obtained_link = link.get('href')
+                unique_links.add(urldefrag(obtained_link).url)
+        print(f"URL crawled => {url}")
+        print(subdomain_pages)
     else:
         print("ERROR: ", resp.error)
 
