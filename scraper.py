@@ -2,7 +2,6 @@ import re
 from urllib.parse import urlparse, urldefrag
 from bs4 import BeautifulSoup
 from collections import defaultdict
-import hashlib
 
 stop_words = ['a', 'about', 'above', 'after', 'again', 'against', 'all', 'am', 'an', 'and', 'any', 'are', "aren't",
               'as', 'at', 'be', 'because', 'been', 'before', 'being', 'below', 'between', 'both', 'but', 'by',
@@ -36,11 +35,13 @@ def tokenize(html_text):
     for token in eng_tokens:
         if token and token.lower() not in stop_words:  # filter out stop words and empty string
             filtered_tokens.append(token.lower())
-            word_freqs[token.lower()] += 1     # update word_freq
     return filtered_tokens
 
-def is_similar_page(url, resp):
-    url_content_hash = hashlib.sha256(resp.raw_response.content.encode('utf-8')).hexdigest()
+def is_similar_page(url, contents):
+    '''
+    contents: list of tokens
+    '''
+    url_content_hash = hash(tuple(contents))  # hash the content
     if url_content_hash not in total_unique_pages:
         total_unique_pages[url_content_hash] = url
         return False
@@ -70,7 +71,10 @@ def extract_next_links(url, resp):
             if len(resp.raw_response.content) > 100000000: # avoiding crawing too large files : 100 MB limits
                 return list(unique_links)
             
-            if not is_similar_page(url, resp): # check if the crawling the similar page with no information
+            if not is_similar_page(url, filtered_tokens): # check if the crawling the similar page with no information
+                for token in filtered_tokens:  # update word freqencies
+                    word_freqs[token] += 1
+
                 if len(filtered_tokens) > max_tokens: # find the longest page
                     max_tokens = len(filtered_tokens)
                     longest_page_url = url
@@ -82,10 +86,8 @@ def extract_next_links(url, resp):
                         unique_links.add(urldefrag(obtained_link).url) # add the defragmented the url
                 print(f"URL crawled => {url}")
                 print(links_in_domain)
-                # print(word_freqs)
     else:
         print(f"ERROR when Crawling {url}: {resp.error}")
-
     return list(unique_links)
 
 def in_ics_domain(url):
