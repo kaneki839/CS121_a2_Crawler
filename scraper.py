@@ -2,6 +2,7 @@ import re
 from urllib.parse import urlparse, urldefrag
 from bs4 import BeautifulSoup
 from collections import defaultdict
+import hashlib
 
 stop_words = ['a', 'about', 'above', 'after', 'again', 'against', 'all', 'am', 'an', 'and', 'any', 'are', "aren't",
               'as', 'at', 'be', 'because', 'been', 'before', 'being', 'below', 'between', 'both', 'but', 'by',
@@ -19,7 +20,8 @@ stop_words = ['a', 'about', 'above', 'after', 'again', 'against', 'all', 'am', '
               'whom', 'why', "why's", 'with', "won't", 'would', "wouldn't", 'you', "you'd", "you'll", "you're",
               "you've", 'your', 'yours', 'yourself', 'yourselves']
 
-max_tokens = 0  # page contain most words
+total_unique_pages = {}
+max_tokens = 0  # words that longest page contains
 longest_page_url = "" 
 word_freqs = defaultdict(int)  # frequencies of all words
 links_in_domain = defaultdict(set)  # all the links in the ics.uci.edu domain
@@ -32,10 +34,17 @@ def tokenize(html_text):
     eng_tokens = re.findall(r'\b[a-zA-Z][a-zA-Z\']*[a-zA-Z]\b', html_text)  # tokenize 
     filtered_tokens = []
     for token in eng_tokens:
-        if token and token.lower() not in stop_words:  # filter out stop words
+        if token and token.lower() not in stop_words:  # filter out stop words and empty string
             filtered_tokens.append(token.lower())
             word_freqs[token.lower()] += 1     # update word_freq
     return filtered_tokens
+
+def is_similar_page(url, resp):
+    url_content_hash = hashlib.sha256(resp.raw_response.content.encode('utf-8')).hexdigest()
+    if url_content_hash not in total_unique_pages:
+        total_unique_pages[url_content_hash] = url
+        return False
+    return True
 
 def extract_next_links(url, resp):
     # Implementation required.
@@ -54,22 +63,26 @@ def extract_next_links(url, resp):
     if resp.status == 200 and resp.raw_response.content not in [None, ""]:  # check the status code is ok and the content is not empty
         soup = BeautifulSoup(resp.raw_response.content, 'html.parser')
         filtered_tokens = tokenize(soup.getText())
-        
-        if len(filtered_tokens) > max_tokens: # find the longest page
-            max_tokens = len(filtered_tokens)
-            longest_page_url = url
-        
-        if in_ics_domain(url):  # how many links in the domain
-            links_in_domain[urlparse(url).hostname].add(url)
+        if len(filtered_tokens) > 300:  # crawl pages with high textual information content: must more than 300 words
+            if in_ics_domain(url): 
+                links_in_domain[urlparse(url).hostname].add(url)  # how many links in the domain
 
-        links = soup.find_all('a')  # get all the url tag in the page
-        for link in links:
-            if link.get('href'):   # get the url inside the tage
-                obtained_link = link.get('href')
-                unique_links.add(urldefrag(obtained_link).url) # add the defragmented the url
-        print(f"URL crawled => {url}")
-        print(links_in_domain)
-        # print(word_freqs)
+            if len(resp.raw_response.content) > 100000000: # avoiding crawing too large files : 100 MB limits
+                return list(unique_links)
+            
+            if not is_similar_page(url, resp): # check if the crawling the similar page with no information
+                if len(filtered_tokens) > max_tokens: # find the longest page
+                    max_tokens = len(filtered_tokens)
+                    longest_page_url = url
+                
+                links = soup.find_all('a')  # get all the url tag in the page
+                for link in links:
+                    if link.get('href'):   # get the url inside the tage
+                        obtained_link = link.get('href')
+                        unique_links.add(urldefrag(obtained_link).url) # add the defragmented the url
+                print(f"URL crawled => {url}")
+                print(links_in_domain)
+                # print(word_freqs)
     else:
         print(f"ERROR when Crawling {url}: {resp.error}")
 
