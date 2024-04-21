@@ -19,13 +19,23 @@ stop_words = ['a', 'about', 'above', 'after', 'again', 'against', 'all', 'am', '
               'whom', 'why', "why's", 'with', "won't", 'would', "wouldn't", 'you', "you'd", "you'll", "you're",
               "you've", 'your', 'yours', 'yourself', 'yourselves']
 
-subdomain_pages = defaultdict(int)
-
-word_freqs = defaultdict(int)
+max_tokens = 0  # page contain most words
+longest_page_url = "" 
+word_freqs = defaultdict(int)  # frequencies of all words
+links_in_domain = defaultdict(set)  # all the links in the ics.uci.edu domain
 
 def scraper(url, resp):
     links = extract_next_links(url, resp)
     return [link for link in links if is_valid(link)]
+
+def tokenize(html_text):
+    eng_tokens = re.findall(r'\b[a-zA-Z][a-zA-Z\']*[a-zA-Z]\b', html_text)  # tokenize 
+    filtered_tokens = []
+    for token in eng_tokens:
+        if token and token.lower() not in stop_words:  # filter out stop words
+            filtered_tokens.append(token.lower())
+            word_freqs[token.lower()] += 1     # update word_freq
+    return filtered_tokens
 
 def extract_next_links(url, resp):
     # Implementation required.
@@ -37,29 +47,31 @@ def extract_next_links(url, resp):
     #         resp.raw_response.url: the url, again
     #         resp.raw_response.content: the content of the page!
     # Return a list with the hyperlinks (as strings) scrapped from resp.raw_response.content
+    global stop_words
+    global max_tokens, longest_page_url
     
     unique_links = set()  # list of unique links
     if resp.status == 200 and resp.raw_response.content not in [None, ""]:  # check the status code is ok and the content is not empty
         soup = BeautifulSoup(resp.raw_response.content, 'html.parser')
-        eng_tokens = re.findall(r'\b[a-zA-Z][a-zA-Z\']*[a-zA-Z]\b', soup.getText())  # tokenize 
-        filtered_tokens = []
-        for token in eng_tokens:
-            if token and token.lower() not in stop_words:  # filter out stop words
-                filtered_tokens.append(token.lower())
-                word_freqs[token.lwower()] += 1     # update word_freq
+        filtered_tokens = tokenize(soup.getText())
+        
+        if len(filtered_tokens) > max_tokens: # find the longest page
+            max_tokens = len(filtered_tokens)
+            longest_page_url = url
         
         if in_ics_domain(url):  # how many links in the domain
-            subdomain_pages[urlparse(url).hostname] += 1
-        
+            links_in_domain[urlparse(url).hostname].add(url)
+
         links = soup.find_all('a')  # get all the url tag in the page
         for link in links:
             if link.get('href'):   # get the url inside the tage
                 obtained_link = link.get('href')
-                unique_links.add(urldefrag(obtained_link).url)
+                unique_links.add(urldefrag(obtained_link).url) # add the defragmented the url
         print(f"URL crawled => {url}")
-        print(subdomain_pages)
+        print(links_in_domain)
+        # print(word_freqs)
     else:
-        print("ERROR: ", resp.error)
+        print(f"ERROR when Crawling {url}: {resp.error}")
 
     return list(unique_links)
 
