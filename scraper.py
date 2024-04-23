@@ -63,14 +63,14 @@ def extract_next_links(url, resp):
     unique_links = set()  # list of unique links
     if resp.status == 200 and resp.raw_response.content not in [None, ""]:  # check the status code is ok and the content is not empty
         soup = BeautifulSoup(resp.raw_response.content, 'html.parser')
-        filtered_tokens = tokenize(soup.getText())
+        filtered_tokens = tokenize(soup.getText()) # tokenize the page
         if len(filtered_tokens) > 300:  # crawl pages with high textual information content: must more than 300 words
-            if in_ics_domain(url): 
+            if in_ics_domain(url):  # check if the url is in ics domain
                 links_in_domain[urlparse(url).hostname].add(url)  # how many links in the domain
 
             if len(resp.raw_response.content) > 100000000: # avoiding crawing too large files : 100 MB limits
                 return list(unique_links)
-            
+            # TODO: check similarity, redirect, and infinite traps
             if not is_similar_page(url, filtered_tokens): # check if the crawling the similar page with no information
                 for token in filtered_tokens:  # update word freqencies
                     word_freqs[token] += 1
@@ -81,8 +81,8 @@ def extract_next_links(url, resp):
                 
                 links = soup.find_all('a')  # get all the url tag in the page
                 for link in links:
-                    if link.get('href'):   # get the url inside the tage
-                        obtained_link = link.get('href')
+                    if link.get('href'):  # check it's not empty url
+                        obtained_link = link.get('href')  # get the url inside the tag
                         unique_links.add(urldefrag(obtained_link).url) # add the defragmented the url
                 print(f"URL crawled => {url}")
                 print(links_in_domain)
