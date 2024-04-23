@@ -42,8 +42,8 @@ def is_similar_page(url, contents):
     contents: list of tokens
     '''
     url_content_hash = hash(tuple(contents))  # hash the content
-    if url_content_hash not in total_unique_pages:
-        total_unique_pages[url_content_hash] = url
+    if url_content_hash not in visited_unique_pages:
+        visited_unique_pages[url_content_hash] = url
         return False
     return True
 
