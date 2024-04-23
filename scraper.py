@@ -1,5 +1,5 @@
 import re
-from urllib.parse import urlparse, urldefrag
+from urllib.parse import urlparse, urldefrag, urljoin
 from bs4 import BeautifulSoup
 from collections import defaultdict
 
@@ -19,7 +19,7 @@ stop_words = ['a', 'about', 'above', 'after', 'again', 'against', 'all', 'am', '
               'whom', 'why', "why's", 'with', "won't", 'would', "wouldn't", 'you', "you'd", "you'll", "you're",
               "you've", 'your', 'yours', 'yourself', 'yourselves']
 
-total_unique_pages = {}
+visited_unique_pages = {}
 max_tokens = 0  # words that longest page contains
 longest_page_url = "" 
 word_freqs = defaultdict(int)  # frequencies of all words
@@ -67,10 +67,13 @@ def extract_next_links(url, resp):
         if len(filtered_tokens) > 300:  # crawl pages with high textual information content: must more than 300 words
             if in_ics_domain(url):  # check if the url is in ics domain
                 links_in_domain[urlparse(url).hostname].add(url)  # how many links in the domain
-
+            
             if len(resp.raw_response.content) > 100000000: # avoiding crawing too large files : 100 MB limits
                 return list(unique_links)
-            # TODO: check similarity, redirect, and infinite traps
+            
+            if url in visited_unique_pages.values():  # Handle infinite traps
+                return list(unique_links)
+            
             if not is_similar_page(url, filtered_tokens): # check if the crawling the similar page with no information
                 for token in filtered_tokens:  # update word freqencies
                     word_freqs[token] += 1
@@ -81,13 +84,20 @@ def extract_next_links(url, resp):
                 
                 links = soup.find_all('a')  # get all the url tag in the page
                 for link in links:
-                    if link.get('href'):  # check it's not empty url
-                        obtained_link = link.get('href')  # get the url inside the tag
-                        unique_links.add(urldefrag(obtained_link).url) # add the defragmented the url
+                    obtained_link = link.get('href')   # get the url inside the tag
+                    if obtained_link:  # check it's not empty url
+                        abs_url = urljoin(url, urldefrag(obtained_link).url) # compose absolute url by joinging base url and defrag. url
+                        unique_links.add(abs_url)   # add the absolute the url
                 print(f"URL crawled => {url}")
                 print(links_in_domain)
+    elif 300 <= resp.status < 400:
+        # Handling redirects and index the url 
+        if resp.url != url:  # resp.url will be the redirected url if the resp is redirected
+            print(f"Redirected from {url} to {resp.url}")
+            # crawl the redirected url here
+            unique_links.add(resp.url)
     else:
-        print(f"ERROR when Crawling {url}: {resp.error}")
+        print(f"ERROR when crawling {url}: HTTP Status {resp.status} - {resp.error}")
     return list(unique_links)
 
 def in_ics_domain(url):
