@@ -20,7 +20,7 @@ stop_words = ['a', 'about', 'above', 'after', 'again', 'against', 'all', 'am', '
               'whom', 'why', "why's", 'with', "won't", 'would', "wouldn't", 'you', "you'd", "you'll", "you're",
               "you've", 'your', 'yours', 'yourself', 'yourselves']
 
-visited_unique_pages = {}
+visited_unique_pages = {} # key: hash of the content, val: url itself
 max_tokens = 0  # words that longest page contains
 longest_page_url = "" 
 word_freqs = defaultdict(int)  # frequencies of all words
@@ -127,8 +127,8 @@ def extract_next_links(url, resp):
     return list(unique_links)
 
 def in_ics_domain(url):
-    subdomain = urlparse(url)
-    return subdomain and subdomain.hostname.endswith(".ics.uci.edu") and subdomain != "www.ics.uci.edu"
+    subdomain = urlparse(url).hostname
+    return subdomain and subdomain.endswith(".ics.uci.edu") and subdomain != "www.ics.uci.edu"
 
 
 def is_valid(url):
