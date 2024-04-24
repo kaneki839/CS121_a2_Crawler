@@ -26,6 +26,8 @@ longest_page_url = ""
 word_freqs = defaultdict(int)  # frequencies of all words
 links_in_domain = defaultdict(set)  # all the links in the ics.uci.edu domain
 
+
+# Store the robots.txt rules of seeds urls.
 rp_list = []
 domain_urls = [
     "https://ics.uci.edu/robots.txt",
@@ -207,8 +209,29 @@ def contains_date_pattern(parsed_url):
     return False
 
 
+# Check if the url is disallowed to crawl.
 def is_allowed_by_robots(url, user_agent="*"):
     for r in rp_list:
         if not r.can_fetch(user_agent, url):
             return False
     return True
+
+
+def report():
+    sorted_word_freqs = sorted(word_freqs.items(), key = lambda item: item[1], reverse = True)
+    with open(f"report.txt", 'w') as f:
+        f.write("------------------------------R E P O R T------------------------------\n\n")
+        f.write("Unique Pages Found: " + str(len(visited_unique_pages)) + "\n")
+        f.write("\n")
+        f.write("URL With the Largest Word Count: " + longest_page_url + "\n")
+        f.write("\n")
+        f.write("50 Most Common Words:\n")
+        for i in range(50):
+            f.write(f"\t{i+1}. {sorted_word_freqs[i][0]} : {sorted_word_freqs[i][1]} \n")
+        f.write("\n")
+        f.write(f"Number of subdomains in the ics.uci.edu domain: {len(links_in_domain)} \n")
+        f.write("Subdomains List: \n")
+        index = 1
+        for subdomain, pages in sorted(links_in_domain.items(), key=lambda x: x[0]):
+            f.write(f"\t{index}. {subdomain}, {len(pages)}\n")
+            index += 1
