@@ -125,8 +125,8 @@ def is_valid(url):
             return False
         
         # Check if the url is allowed to crawl by robot.txt
-        if not is_allowed_by_robots(url):
-            return False
+        # if not is_allowed_by_robots(url):
+        #     return False
         
         # Check whether the URL is within the domains
         if not is_within_domain(parsed):
@@ -137,7 +137,7 @@ def is_valid(url):
             return False
         
         # Filter urls that include date (lots of urls with date are "no real data")。
-        if contains_date_pattern:
+        if not contains_date_pattern:
             return False
         
         # Filter urls with more than 15 query parameters
@@ -182,9 +182,9 @@ def contains_date_pattern(parsed_url):
     date_patterns = [
         r'\d{4}-\d{2}-\d{2}',  # YYYY-MM-DD
         r'\d{4}/\d{2}/\d{2}',  # YYYY/MM/DD
-        r'\d{4}\d{2}\d{2}'  # YYYYMMDD
+        r'\d{4}\d{2}\d{2}',  # YYYYMMDD
         r'/\d{2}-\d{2}-\d{4}/',  # DD-MM-YYYY
-        r'/\d{2}/\d{2}/\d{4}/',  # DD/MM/YYYY
+        r'/\d{2}/\d{2}/\d{4}/'  # DD/MM/YYYY
     ]
     # Check whether a date pattern is included
     for pattern in date_patterns:
@@ -198,14 +198,3 @@ def is_allowed_by_robots(url, user_agent="*"):
     rp.set_url(urljoin(url, "/robots.txt"))  # Get the rules from robots.txt
     rp.read()
     return rp.can_fetch(user_agent, url)
-
-
-# def is_valid_url(url):
-#     try:
-#         response = requests.head(url, allow_redirects=True)
-#         if 200 <= response.status_code < 400:
-#             return True
-#         else:
-#             return False
-#     except requests.RequestException:
-#         return False
