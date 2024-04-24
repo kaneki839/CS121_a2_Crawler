@@ -2,6 +2,7 @@ import re
 from urllib.parse import urlparse, urldefrag, urljoin, parse_qs
 from bs4 import BeautifulSoup
 from collections import defaultdict
+from urllib import robotparser
 
 stop_words = ['a', 'about', 'above', 'after', 'again', 'against', 'all', 'am', 'an', 'and', 'any', 'are', "aren't",
               'as', 'at', 'be', 'because', 'been', 'before', 'being', 'below', 'between', 'both', 'but', 'by',
@@ -123,6 +124,10 @@ def is_valid(url):
         if parsed.scheme not in set(["http", "https"]):
             return False
         
+        # Check if the url is allowed to crawl by robot.txt
+        if not is_allowed_by_robots(url):
+            return False
+        
         # Check whether the URL is within the domains
         if not is_within_domain(parsed):
             return False
@@ -186,3 +191,21 @@ def contains_date_pattern(parsed_url):
         if re.search(pattern, parsed_url.path):
             return True
     return False
+
+
+def is_allowed_by_robots(url, user_agent="*"):
+    rp = robotparser.RobotFileParser()
+    rp.set_url(urljoin(url, "/robots.txt"))  # Get the rules from robots.txt
+    rp.read()
+    return rp.can_fetch(user_agent, url)
+
+
+# def is_valid_url(url):
+#     try:
+#         response = requests.head(url, allow_redirects=True)
+#         if 200 <= response.status_code < 400:
+#             return True
+#         else:
+#             return False
+#     except requests.RequestException:
+#         return False
