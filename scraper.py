@@ -1,5 +1,5 @@
 import re
-from urllib.parse import urlparse, urldefrag, urljoin
+from urllib.parse import urlparse, urldefrag, urljoin, parse_qs
 from bs4 import BeautifulSoup
 from collections import defaultdict
 
@@ -113,6 +113,7 @@ def in_ics_domain(url):
     subdomain = urlparse(url)
     return subdomain and subdomain.hostname.endswith(".ics.uci.edu") and subdomain != "www.ics.uci.edu"
 
+
 def is_valid(url):
     # Decide whether to crawl this url or not. 
     # If you decide to crawl it, return True; otherwise return False.
@@ -122,24 +123,23 @@ def is_valid(url):
         if parsed.scheme not in set(["http", "https"]):
             return False
         
-
-        allowed_domains = [
-            r'.*\.ics\.uci\.edu',
-            r'.*\.cs\.uci\.edu',
-            r'.*\.informatics\.uci\.edu',
-            r'.*\.stat\.uci\.edu'
-        ]
-
-        within_domain = False
-        netloc = parsed.netloc
-        for domain in allowed_domains:
-            if re.match(domain, netloc):
-                within_domain = True
-        if not within_domain:
+        # Check whether the URL is within the domains
+        if not is_within_domain(parsed):
             return False
         
-
-
+        # Filter increment numbers in the path: e.g /page100 | /1 | /a
+        if re.search(r'(/page\d+)|(/\d+)|(/[a-z]$)', parsed.path):
+            return False
+        
+        # Filter urls that include date (lots of urls with date are "no real data")。
+        if contains_date_pattern:
+            return False
+        
+        # Filter urls with more than 15 query parameters
+        query_params = parse_qs(parsed.query)
+        if len(query_params) > 15:
+            return False
+        
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
             + r"|png|tiff?|mid|mp2|mp3|mp4|mpg"
@@ -154,3 +154,35 @@ def is_valid(url):
     except TypeError:
         print ("TypeError for ", parsed)
         raise
+
+
+# Check whether the URL is within the domains
+def is_within_domain(parsed_url):
+    allowed_domains = [
+        r'.*\.ics\.uci\.edu',
+        r'.*\.cs\.uci\.edu',
+        r'.*\.informatics\.uci\.edu',
+        r'.*\.stat\.uci\.edu'
+    ]
+
+    netloc = parsed_url.netloc
+    for domain in allowed_domains:
+        if re.match(domain, netloc):
+            return True
+    return False
+
+
+def contains_date_pattern(parsed_url):
+    # Matches common date formats
+    date_patterns = [
+        r'\d{4}-\d{2}-\d{2}',  # YYYY-MM-DD
+        r'\d{4}/\d{2}/\d{2}',  # YYYY/MM/DD
+        r'\d{4}\d{2}\d{2}'  # YYYYMMDD
+        r'/\d{2}-\d{2}-\d{4}/',  # DD-MM-YYYY
+        r'/\d{2}/\d{2}/\d{4}/',  # DD/MM/YYYY
+    ]
+    # Check whether a date pattern is included
+    for pattern in date_patterns:
+        if re.search(pattern, parsed_url.path):
+            return True
+    return False
