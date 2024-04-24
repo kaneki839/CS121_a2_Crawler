@@ -61,6 +61,21 @@ def extract_next_links(url, resp):
     global max_tokens, longest_page_url
     
     unique_links = set()  # list of unique links
+
+    # # Handle redirects and index the url
+    if 300 <= resp.status < 400:
+        return list(unique_links)
+
+    #     try:
+    #         # allow redirects automatically, up to a maximum of 5.
+    #         # session = requests.Session()
+    #         # session.max_redirects = 5
+    #         # session.get(url, allow_redirects=True)  # would stop if non-redirect response is received, or exceeded the redirect limit
+    #         resp = requests.get(url, allow_redirects=True, max_redirects=5)
+    #     except requests.TooManyRedirects:   # if exceeded the redirect limit, directly return 
+    #         print("Exceeded the maximum number of allowed redirects.")
+    #         return list(unique_links)
+        
     if resp.status == 200 and resp.raw_response.content not in [None, ""]:  # check the status code is ok and the content is not empty
         soup = BeautifulSoup(resp.raw_response.content, 'html.parser')
         filtered_tokens = tokenize(soup.getText()) # tokenize the page
@@ -90,12 +105,6 @@ def extract_next_links(url, resp):
                         unique_links.add(abs_url)   # add the absolute the url
                 print(f"URL crawled => {url}")
                 print(links_in_domain)
-    elif 300 <= resp.status < 400:
-        # Handling redirects and index the url 
-        if resp.url != url:  # resp.url will be the redirected url if the resp is redirected
-            print(f"Redirected from {url} to {resp.url}")
-            # crawl the redirected url here
-            unique_links.add(resp.url)
     else:
         print(f"ERROR when crawling {url}: HTTP Status {resp.status} - {resp.error}")
     return list(unique_links)

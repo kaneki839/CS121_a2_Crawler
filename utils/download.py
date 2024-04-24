@@ -9,6 +9,26 @@ def download(url, config, logger=None):
     resp = requests.get(
         f"http://{host}:{port}/",
         params=[("q", f"{url}"), ("u", f"{config.user_agent}")])
+
+    # Handle redirects and index the url
+    if 300 <= resp.status_code < 400:
+        try:
+            # allow redirects automatically, up to a maximum of 5.
+            # session = requests.Session()
+            # session.max_redirects = 5
+            # session.get(url, allow_redirects=True)  # would stop if non-redirect response is received, or exceeded the redirect limit
+            new_resp = requests.get(f"http://{host}:{port}/",
+                                    params=[("q", f"{resp.url}"), ("u", f"{config.user_agent}")], 
+                                    allow_redirects=True, 
+                                    max_redirects=5)
+            resp = new_resp
+        except requests.TooManyRedirects:   # if exceeded the redirect limit, directly return 
+            logger.error(f"Exceeded the maximum number of allowed redirects: {resp} with url {url}.")
+            return Response({
+                "error": f"Exceeded the maximum number of allowed redirects: {resp} with url {url}.",
+                "status": resp.status_code,
+                "url": url})
+
     try:
         if resp and resp.content:
             return Response(cbor.loads(resp.content))
