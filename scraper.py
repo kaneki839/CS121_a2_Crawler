@@ -26,6 +26,20 @@ longest_page_url = ""
 word_freqs = defaultdict(int)  # frequencies of all words
 links_in_domain = defaultdict(set)  # all the links in the ics.uci.edu domain
 
+rp_list = []
+domain_urls = [
+    "https://ics.uci.edu/robots.txt",
+    "https://cs.ics.uci.edu/robots.txt",
+    "https://informatics.uci.edu/robots.txt",
+    "https://stat.uci.edu/robots.txt"
+]
+for url in domain_urls:
+    rp = robotparser.RobotFileParser()
+    rp.set_url(url)  # Get the rules from robots.txt
+    rp.read()
+    rp_list.append(rp)
+
+
 def scraper(url, resp):
     links = extract_next_links(url, resp)
     return [link for link in links if is_valid(link)]
@@ -123,28 +137,28 @@ def is_valid(url):
         parsed = urlparse(url)
         if parsed.scheme not in set(["http", "https"]):
             return False
-        
+
         # Check if the url is allowed to crawl by robot.txt
-        # if not is_allowed_by_robots(url):
-        #     return False
-        
+        if not is_allowed_by_robots(url):
+            return False
+
         # Check whether the URL is within the domains
         if not is_within_domain(parsed):
             return False
-        
+
         # Filter increment numbers in the path: e.g /page100 | /1 | /a
         if re.search(r'(/page\d+)|(/\d+)|(/[a-z]$)', parsed.path):
             return False
-        
+
         # Filter urls that include date (lots of urls with date are "no real data")。
         if not contains_date_pattern:
             return False
-        
+
         # Filter urls with more than 15 query parameters
         query_params = parse_qs(parsed.query)
         if len(query_params) > 15:
             return False
-        
+
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
             + r"|png|tiff?|mid|mp2|mp3|mp4|mpg"
@@ -194,7 +208,7 @@ def contains_date_pattern(parsed_url):
 
 
 def is_allowed_by_robots(url, user_agent="*"):
-    rp = robotparser.RobotFileParser()
-    rp.set_url(urljoin(url, "/robots.txt"))  # Get the rules from robots.txt
-    rp.read()
-    return rp.can_fetch(user_agent, url)
+    for r in rp_list:
+        if not r.can_fetch(user_agent, url):
+            return False
+    return True
