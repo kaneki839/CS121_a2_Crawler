@@ -223,7 +223,7 @@ def report():
         f.write("------------------------------R E P O R T------------------------------\n\n")
         f.write("Unique Pages Found: " + str(len(visited_unique_pages)) + "\n")
         f.write("\n")
-        f.write("URL With the Largest Word Count: " + longest_page_url + "\n")
+        f.write(f"URL With the Largest Word Count: {longest_page_url} with {max_tokens} words \n")
         f.write("\n")
         f.write("50 Most Common Words:\n")
         for i in range(50):
