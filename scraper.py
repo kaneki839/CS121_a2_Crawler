@@ -79,19 +79,9 @@ def extract_next_links(url, resp):
     
     unique_links = set()  # list of unique links
 
-    # # Handle redirects and index the url
+    # Handle redirections
     if 300 <= resp.status < 400:
         return list(unique_links)
-
-    #     try:
-    #         # allow redirects automatically, up to a maximum of 5.
-    #         # session = requests.Session()
-    #         # session.max_redirects = 5
-    #         # session.get(url, allow_redirects=True)  # would stop if non-redirect response is received, or exceeded the redirect limit
-    #         resp = requests.get(url, allow_redirects=True, max_redirects=5)
-    #     except requests.TooManyRedirects:   # if exceeded the redirect limit, directly return 
-    #         print("Exceeded the maximum number of allowed redirects.")
-    #         return list(unique_links)
         
     if resp.status == 200 and resp.raw_response.content not in [None, ""]:  # check the status code is ok and the content is not empty
         soup = BeautifulSoup(resp.raw_response.content, 'html.parser')

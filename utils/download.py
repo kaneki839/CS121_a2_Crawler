@@ -14,15 +14,15 @@ def download(url, config, logger=None):
     if 300 <= resp.status_code < 400:
         try:
             # allow redirects automatically, up to a maximum of 5.
-            # session = requests.Session()
-            # session.max_redirects = 5
-            # session.get(url, allow_redirects=True)  # would stop if non-redirect response is received, or exceeded the redirect limit
-            new_resp = requests.get(f"http://{host}:{port}/",
+            session = requests.Session()
+            session.max_redirects = 5 # set redirect depth
+            
+            # would stop if non-redirect response is received, or exceeded the redirect limit
+            new_resp = session.get(f"http://{host}:{port}/",
                                     params=[("q", f"{resp.url}"), ("u", f"{config.user_agent}")], 
-                                    allow_redirects=True, 
-                                    max_redirects=5)
-            resp = new_resp
-        except requests.TooManyRedirects:   # if exceeded the redirect limit, directly return 
+                                    allow_redirects=True, )  
+            resp = new_resp  # set the new valid response become the response function return
+        except requests.TooManyRedirects:   # if exceeded the redirect limit, directly return with error msg
             logger.error(f"Exceeded the maximum number of allowed redirects: {resp} with url {url}.")
             return Response({
                 "error": f"Exceeded the maximum number of allowed redirects: {resp} with url {url}.",
