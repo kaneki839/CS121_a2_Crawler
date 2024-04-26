@@ -20,7 +20,7 @@ def download(url, config, logger=None):
             # would stop if non-redirect response is received, or exceeded the redirect limit
             new_resp = session.get(f"http://{host}:{port}/",
                                     params=[("q", f"{resp.url}"), ("u", f"{config.user_agent}")], 
-                                    allow_redirects=True, )  
+                                    allow_redirects=True)  
             resp = new_resp  # set the new valid response become the response function return
         except requests.TooManyRedirects:   # if exceeded the redirect limit, directly return with error msg
             logger.error(f"Exceeded the maximum number of allowed redirects: {resp} with url {url}.")
