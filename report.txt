@@ -1,68 +1,68 @@
 ------------------------------R E P O R T------------------------------
 
-Unique Pages Found: 3452
+Unique Pages Found: 3387
 
 URL With the Largest Word Count: http://www.ics.uci.edu/~kay/wordlist.txt with 384890 words 
 
 50 Most Common Words:
-	1. research : 26635 
+	1. research : 26101 
 	2. markellekelly : 22131 
-	3. computer : 20288 
-	4. ics : 19903 
-	5. policies : 19740 
-	6. uci : 19060 
-	7. school : 16633 
-	8. student : 16578 
-	9. bren : 16066 
-	10. students : 15811 
-	11. information : 13968 
-	12. news : 12626 
-	13. academic : 12114 
-	14. graduate : 11687 
-	15. contact : 11647 
-	16. html : 11348 
-	17. software : 11340 
-	18. undergraduate : 11265 
-	19. course : 10380 
-	20. informatics : 10355 
-	21. will : 10178 
-	22. events : 9890 
-	23. science : 9879 
-	24. update : 9727 
-	25. faculty : 9525 
-	26. donald : 9064 
-	27. support : 9029 
-	28. engineering : 8729 
-	29. data : 8652 
-	30. automatic : 8640 
-	31. can : 8395 
-	32. media : 8256 
-	33. program : 7475 
-	34. may : 7369 
-	35. ph : 7292 
-	36. project : 7206 
-	37. design : 7038 
-	38. use : 7035 
-	39. projects : 7021 
-	40. sciences : 6966 
-	41. resources : 6946 
-	42. year : 6796 
-	43. department : 6660 
-	44. computing : 6588 
-	45. irvine : 6488 
-	46. alumni : 6486 
-	47. people : 6340 
-	48. september : 5783 
-	49. courses : 5761 
-	50. university : 5649 
+	3. ics : 19779 
+	4. computer : 19727 
+	5. policies : 19318 
+	6. uci : 18298 
+	7. student : 16332 
+	8. school : 16139 
+	9. bren : 15596 
+	10. students : 15358 
+	11. information : 13746 
+	12. news : 12049 
+	13. academic : 11877 
+	14. contact : 11464 
+	15. graduate : 11464 
+	16. undergraduate : 11274 
+	17. html : 11268 
+	18. software : 11243 
+	19. course : 10298 
+	20. informatics : 10213 
+	21. will : 9934 
+	22. update : 9677 
+	23. events : 9480 
+	24. science : 9457 
+	25. faculty : 9348 
+	26. support : 9003 
+	27. donald : 8700 
+	28. automatic : 8637 
+	29. engineering : 8634 
+	30. data : 8251 
+	31. can : 8016 
+	32. media : 7924 
+	33. program : 7659 
+	34. may : 7307 
+	35. ph : 7198 
+	36. project : 6961 
+	37. resources : 6951 
+	38. design : 6948 
+	39. projects : 6881 
+	40. use : 6853 
+	41. sciences : 6743 
+	42. year : 6601 
+	43. department : 6580 
+	44. computing : 6561 
+	45. irvine : 6338 
+	46. alumni : 6322 
+	47. people : 6143 
+	48. september : 5760 
+	49. courses : 5681 
+	50. june : 5573 
 
-Number of subdomains in the ics.uci.edu domain: 42 
+Number of subdomains in the ics.uci.edu domain: 41 
 Subdomains List: 
 	1. acoi.ics.uci.edu, 21
 	2. aiclub.ics.uci.edu, 2
 	3. asterix.ics.uci.edu, 4
 	4. cbcl.ics.uci.edu, 12
-	5. cert.ics.uci.edu, 1
+	5. cert.ics.uci.edu, 3
 	6. chenli.ics.uci.edu, 7
 	7. cml.ics.uci.edu, 4
 	8. code.ics.uci.edu, 5
@@ -73,13 +73,13 @@ Subdomains List:
 	13. evoke.ics.uci.edu, 3
 	14. flamingo.ics.uci.edu, 4
 	15. futurehealth.ics.uci.edu, 41
-	16. grape.ics.uci.edu, 381
+	16. grape.ics.uci.edu, 372
 	17. graphmod.ics.uci.edu, 1
 	18. hpi.ics.uci.edu, 1
 	19. iasl.ics.uci.edu, 4
 	20. informatics.ics.uci.edu, 1
 	21. ipf.ics.uci.edu, 1
-	22. mcs.ics.uci.edu, 8
+	22. mcs.ics.uci.edu, 9
 	23. mds.ics.uci.edu, 5
 	24. mhcid.ics.uci.edu, 7
 	25. mondego.ics.uci.edu, 2
@@ -99,4 +99,3 @@ Subdomains List:
 	39. wearablegames.ics.uci.edu, 8
 	40. wics.ics.uci.edu, 19
 	41. www-db.ics.uci.edu, 1
-	42. www.ics.uci.edu, 8955
