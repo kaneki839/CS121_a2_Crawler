@@ -86,11 +86,11 @@ def extract_next_links(url, resp):
     if resp.status == 200 and resp.raw_response.content not in [None, ""]:  # check the status code is ok and the content is not empty
         soup = BeautifulSoup(resp.raw_response.content, 'html.parser')
         filtered_tokens = tokenize(soup.getText()) # tokenize the page
-        if len(filtered_tokens) > 300:  # crawl pages with high textual information content: must more than 300 words
+        if len(filtered_tokens) > 200:  # crawl pages with high textual information content: must more than 200 words
             if in_ics_domain(url):  # check if the url is in ics domain
                 links_in_domain[urlparse(url).hostname].add(url)  # how many links in the domain
             
-            if len(resp.raw_response.content) > 100000000: # avoiding crawing too large files : 100 MB limits
+            if len(resp.raw_response.content) > 500000000: # avoiding crawing too large files : 500 MB limits
                 return list(unique_links)
             
             if url in visited_unique_pages.values():  # Handle infinite traps
