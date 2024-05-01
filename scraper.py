@@ -26,20 +26,7 @@ longest_page_url = ""
 word_freqs = defaultdict(int)  # frequencies of all words
 links_in_domain = defaultdict(set)  # all the links in the ics.uci.edu domain
 
-
-# Store the robots.txt rules of seeds urls.
-rp_list = []
-domain_urls = [
-    "https://ics.uci.edu/robots.txt",
-    "https://cs.ics.uci.edu/robots.txt",
-    "https://informatics.uci.edu/robots.txt",
-    "https://stat.uci.edu/robots.txt"
-]
-for url in domain_urls:
-    rp = robotparser.RobotFileParser()
-    rp.set_url(url)  # Get the rules from robots.txt
-    rp.read()
-    rp_list.append(rp)
+robots_list = {}
 
 
 def scraper(url, resp):
@@ -201,10 +188,22 @@ def contains_date_pattern(parsed_url):
 
 # Check if the url is disallowed to crawl.
 def is_allowed_by_robots(url, user_agent="*"):
-    for r in rp_list:
-        if not r.can_fetch(user_agent, url):
-            return False
-    return True
+    rp = robotparser.RobotFileParser()
+    parsed_url = urlparse(url)
+    scheme = parsed_url.scheme
+    netloc = parsed_url.netloc
+
+    if netloc in robots_list:
+        return robots_list[netloc].can_fetch(user_agent, url)
+
+    robot_url = f"{scheme}://{netloc}/robots.txt"
+    rp.set_url(robot_url)  # Get the rules from robots.txt
+    try:
+        rp.read()
+        robots_list[netloc] = rp
+        return rp.can_fetch(user_agent, url)
+    except:
+        return False
 
 
 def report():
