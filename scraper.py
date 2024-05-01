@@ -117,10 +117,6 @@ def is_valid(url):
         if parsed.scheme not in set(["http", "https"]):
             return False
 
-        # Check if the url is allowed to crawl by robot.txt
-        if not is_allowed_by_robots(url):
-            return False
-
         # Check whether the URL is within the domains
         if not is_within_domain(parsed):
             return False
@@ -136,6 +132,10 @@ def is_valid(url):
         # Filter urls with more than 15 query parameters
         query_params = parse_qs(parsed.query)
         if len(query_params) > 15:
+            return False
+        
+        # Check if the url is allowed to crawl by robot.txt
+        if not is_allowed_by_robots(url):
             return False
 
         return not re.match(
