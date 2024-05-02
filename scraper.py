@@ -26,7 +26,7 @@ longest_page_url = ""
 word_freqs = defaultdict(int)  # frequencies of all words
 links_in_domain = defaultdict(set)  # all the links in the ics.uci.edu domain
 
-robots_list = {}
+robots_list = {}  # store robots rules that have been read; prevent reading robots.txt repeatly
 
 
 def scraper(url, resp):
@@ -70,7 +70,11 @@ def extract_next_links(url, resp):
     if 300 <= resp.status < 400:
         return list(unique_links)
         
-    if resp.status == 200 and resp.raw_response.content not in [None, ""]:  # check the status code is ok and the content is not empty
+    if resp.status == 200 and resp.raw_response and resp.raw_response.content not in [None, ""]:  # check the status code is ok and the content is not empty
+
+        if not is_allowed_by_robots(url):
+            return list(unique_links)
+
         soup = BeautifulSoup(resp.raw_response.content, 'html.parser')
         filtered_tokens = tokenize(soup.getText()) # tokenize the page
         if len(filtered_tokens) > 200:  # crawl pages with high textual information content: must more than 200 words
@@ -112,31 +116,33 @@ def is_valid(url):
     # Decide whether to crawl this url or not. 
     # If you decide to crawl it, return True; otherwise return False.
     # There are already some conditions that return False.
+    print(url)
     try:
         parsed = urlparse(url)
         if parsed.scheme not in set(["http", "https"]):
             return False
+        print("pass scheme")
 
         # Check whether the URL is within the domains
         if not is_within_domain(parsed):
             return False
+        print("pass domain")
 
         # Filter increment numbers in the path: e.g /page100 | /1 | /a
         if re.search(r'(/page\d+)|(/\d+)|(/[a-z]$)', parsed.path):
             return False
+        print("pass path")
 
         # Filter urls that include date (lots of urls with date are "no real data")。
         if not contains_date_pattern:
             return False
+        print("pass date")
 
         # Filter urls with more than 15 query parameters
-        query_params = parse_qs(parsed.query)
-        if len(query_params) > 15:
+        query_params = parse_qs(parsed.query, keep_blank_values=True)
+        if len(query_params) > 5:
             return False
-        
-        # Check if the url is allowed to crawl by robot.txt
-        if not is_allowed_by_robots(url):
-            return False
+        print("pass query")
 
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
@@ -147,7 +153,7 @@ def is_valid(url):
             + r"|epub|dll|cnf|tgz|sha1"
             + r"|thmx|mso|arff|rtf|jar|csv"
             + r"|rm|smil|wmv|swf|wma|zip|rar|gz"
-            + r"|json|xml|sql|yaml|ini|flv|3gp|aab|apk|webp|heic|bat|cmd|sh)$", parsed.path.lower())
+            + r"|json|xml|sql|yaml|ini|flv|3gp|aab|apk|webp|heic|bat|cmd|sh|txt)$", parsed.path.lower())
 
     except TypeError:
         print ("TypeError for ", parsed)
@@ -197,10 +203,15 @@ def is_allowed_by_robots(url, user_agent="*"):
         return robots_list[netloc].can_fetch(user_agent, url)
 
     robot_url = f"{scheme}://{netloc}/robots.txt"
-    rp.set_url(robot_url)  # Get the rules from robots.txt
+    rp.set_url(robot_url)
     try:
-        rp.read()
+        print("try read robot")
+        rp.read()  # Get the rules from robots.txt
+        print("read successfully")
         robots_list[netloc] = rp
+
+        print("---CAN FETCH---")
+
         return rp.can_fetch(user_agent, url)
     except:
         return False
