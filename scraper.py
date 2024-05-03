@@ -143,7 +143,7 @@ def is_valid(url):
 
         # Filter urls with more than 15 query parameters
         query_params = parse_qs(parsed.query, keep_blank_values=True)
-        if len(query_params) > 5:
+        if len(query_params) > 3:
             return False
         print("pass query")
 
