@@ -6,9 +6,12 @@ from utils.response import Response
 
 def download(url, config, logger=None):
     host, port = config.cache_server
-    resp = requests.get(
-        f"http://{host}:{port}/",
-        params=[("q", f"{url}"), ("u", f"{config.user_agent}")])
+    try:
+        resp = requests.get(
+            f"http://{host}:{port}/",
+            params=[("q", f"{url}"), ("u", f"{config.user_agent}")])
+    except:
+        pass
 
     # Handle redirects and index the url
     if 300 <= resp.status_code < 400:
@@ -32,7 +35,7 @@ def download(url, config, logger=None):
     try:
         if resp and resp.content:
             return Response(cbor.loads(resp.content))
-    except (EOFError, ValueError) as e:
+    except:
         pass
     logger.error(f"Spacetime Response error {resp} with url {url}.")
     return Response({
