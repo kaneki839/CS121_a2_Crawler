@@ -1,66 +1,73 @@
 ------------------------------R E P O R T------------------------------
 
-Unique Pages Found: 356
+Unique Pages Found: 446
 
-URL With the Largest Word Count: http://www.ics.uci.edu/~ihler/papers/abs.html with 10818 words 
+URL With the Largest Word Count: http://www.ics.uci.edu/~eppstein/pubs/all.html with 20910 words 
 
 50 Most Common Words:
-	1. data : 4165 
-	2. set : 2182 
-	3. learning : 1595 
-	4. information : 1258 
-	5. number : 1181 
-	6. machine : 1160 
-	7. uci : 1073 
-	8. contact : 995 
-	9. view : 919 
-	10. policy : 911 
-	11. computer : 905 
-	12. repository : 803 
-	13. university : 801 
-	14. citation : 796 
-	15. research : 796 
-	16. web : 791 
-	17. attribute : 758 
-	18. dataset : 718 
-	19. new : 708 
-	20. context : 662 
-	21. systems : 607 
-	22. science : 586 
-	23. using : 571 
-	24. classification : 567 
-	25. values : 548 
-	26. time : 538 
-	27. used : 537 
-	28. based : 517 
-	29. attributes : 489 
-	30. sets : 470 
-	31. ics : 468 
-	32. characteristics : 463 
-	33. can : 457 
-	34. school : 450 
-	35. papers : 421 
-	36. pdf : 418 
-	37. bren : 407 
-	38. one : 401 
-	39. policies : 396 
-	40. center : 390 
-	41. us : 382 
-	42. numeric : 376 
-	43. department : 370 
-	44. link : 364 
-	45. abstract : 358 
-	46. academic : 358 
-	47. year : 358 
-	48. ihler : 351 
-	49. real : 334 
-	50. analysis : 334 
+	1. ics : 4029 
+	2. bren : 2995 
+	3. support : 2799 
+	4. school : 2697 
+	5. computing : 2455 
+	6. uci : 2326 
+	7. research : 2087 
+	8. computer : 2027 
+	9. information : 1701 
+	10. policies : 1420 
+	11. deliveries : 1234 
+	12. edu : 1230 
+	13. science : 1150 
+	14. helpdesk : 1109 
+	15. baldi : 1103 
+	16. academic : 1061 
+	17. contact : 1058 
+	18. can : 1011 
+	19. irvine : 1010 
+	20. faculty : 951 
+	21. eppstein : 947 
+	22. data : 905 
+	23. email : 852 
+	24. students : 831 
+	25. donald : 830 
+	26. university : 818 
+	27. graph : 817 
+	28. systems : 800 
+	29. graduate : 797 
+	30. algorithms : 790 
+	31. student : 763 
+	32. events : 757 
+	33. learning : 745 
+	34. engineering : 733 
+	35. hans : 727 
+	36. time : 717 
+	37. one : 686 
+	38. group : 671 
+	39. will : 638 
+	40. may : 637 
+	41. sciences : 629 
+	42. software : 625 
+	43. problem : 624 
+	44. using : 618 
+	45. please : 614 
+	46. us : 613 
+	47. pp : 588 
+	48. show : 585 
+	49. publications : 577 
+	50. cs : 569 
 
-Number of subdomains in the ics.uci.edu domain: 6 
+Number of subdomains in the ics.uci.edu domain: 13 
 Subdomains List: 
-	1. archive.ics.uci.edu, 256
-	2. cml.ics.uci.edu, 2
-	3. cs.ics.uci.edu, 7
-	4. datalab.ics.uci.edu, 1
-	5. sli.ics.uci.edu, 7
-	6. wics.ics.uci.edu, 1
+	1. cdb.ics.uci.edu, 11
+	2. chemdb.ics.uci.edu, 1
+	3. circadiomics.ics.uci.edu, 4
+	4. cml.ics.uci.edu, 2
+	5. cs.ics.uci.edu, 23
+	6. graphmod.ics.uci.edu, 1
+	7. mcs.ics.uci.edu, 1
+	8. mhcid.ics.uci.edu, 8
+	9. mlphysics.ics.uci.edu, 1
+	10. ngs.ics.uci.edu, 1
+	11. scratch.proteomics.ics.uci.edu, 1
+	12. sli.ics.uci.edu, 7
+	13. swiki.ics.uci.edu, 130
