@@ -67,44 +67,47 @@ def extract_next_links(url, resp):
     unique_links = set()  # list of unique links
 
     # Handle redirections
-    if 300 <= resp.status < 400:
-        return list(unique_links)
-        
-    if resp.status == 200 and resp.raw_response and resp.raw_response.content not in [None, ""]:  # check the status code is ok and the content is not empty
-
-        if not is_allowed_by_robots(url):
+    try:
+        if 300 <= resp.status < 400:
             return list(unique_links)
+            
+        if resp.status == 200 and resp.raw_response and resp.raw_response.content not in [None, ""]:  # check the status code is ok and the content is not empty
 
-        soup = BeautifulSoup(resp.raw_response.content, 'html.parser')
-        filtered_tokens = tokenize(soup.getText()) # tokenize the page
-        if len(filtered_tokens) > 200:  # crawl pages with high textual information content: must more than 200 words
-            if in_ics_domain(url):  # check if the url is in ics domain
-                links_in_domain[urlparse(url).hostname].add(url)  # how many links in the domain
-            
-            if len(resp.raw_response.content) > 500000000: # avoiding crawing too large files : 500 MB limits
+            if not is_allowed_by_robots(url):
                 return list(unique_links)
-            
-            if url in visited_unique_pages.values():  # Handle infinite traps
-                return list(unique_links)
-            
-            if not is_similar_page(url, filtered_tokens): # check if the crawling the similar page with no information
-                for token in filtered_tokens:  # update word freqencies
-                    word_freqs[token] += 1
 
-                if len(filtered_tokens) > max_tokens: # find the longest page
-                    max_tokens = len(filtered_tokens)
-                    longest_page_url = url
+            soup = BeautifulSoup(resp.raw_response.content, 'html.parser')
+            filtered_tokens = tokenize(soup.getText()) # tokenize the page
+            if len(filtered_tokens) > 200:  # crawl pages with high textual information content: must more than 200 words
+                if in_ics_domain(url):  # check if the url is in ics domain
+                    links_in_domain[urlparse(url).hostname].add(url)  # how many links in the domain
                 
-                links = soup.find_all('a')  # get all the url tag in the page
-                for link in links:
-                    obtained_link = link.get('href')   # get the url inside the tag
-                    if obtained_link:  # check it's not empty url
-                        abs_url = urljoin(url, urldefrag(obtained_link).url) # compose absolute url by joinging base url and defrag. url
-                        unique_links.add(abs_url)   # add the absolute the url
-                print(f"URL crawled => {url}")
-                print(links_in_domain)
-    else:
-        print(f"ERROR when crawling {url}: HTTP Status {resp.status} - {resp.error}")
+                if len(resp.raw_response.content) > 500000000: # avoiding crawing too large files : 500 MB limits
+                    return list(unique_links)
+                
+                if url in visited_unique_pages.values():  # Handle infinite traps
+                    return list(unique_links)
+                
+                if not is_similar_page(url, filtered_tokens): # check if the crawling the similar page with no information
+                    for token in filtered_tokens:  # update word freqencies
+                        word_freqs[token] += 1
+
+                    if len(filtered_tokens) > max_tokens: # find the longest page
+                        max_tokens = len(filtered_tokens)
+                        longest_page_url = url
+                    
+                    links = soup.find_all('a')  # get all the url tag in the page
+                    for link in links:
+                        obtained_link = link.get('href')   # get the url inside the tag
+                        if obtained_link:  # check it's not empty url
+                            abs_url = urljoin(url, urldefrag(obtained_link).url) # compose absolute url by joinging base url and defrag. url
+                            unique_links.add(abs_url)   # add the absolute the url
+                    print(f"URL crawled => {url}")
+                    print(links_in_domain)
+        else:
+            print(f"ERROR when crawling {url}: HTTP Status {resp.status} - {resp.error}")
+    except Exception as e:
+        print(f"Unexpected Error: {e}")
     return list(unique_links)
 
 def in_ics_domain(url):
@@ -155,10 +158,8 @@ def is_valid(url):
             + r"|rm|smil|wmv|swf|wma|zip|rar|gz"
             + r"|json|xml|sql|yaml|ini|flv|3gp|aab|apk|webp|heic|bat|cmd|sh|txt)$", parsed.path.lower())
 
-    except TypeError:
-        print ("TypeError for ", parsed)
-        raise
-
+    except Exception as e:
+        print(f"Unexpected Error: {e} on {parsed}")
 
 # Check whether the URL is within the domains
 def is_within_domain(parsed_url):
