@@ -1,73 +1,129 @@
 ------------------------------R E P O R T------------------------------
 
-Unique Pages Found: 446
+Unique Pages Found: 9200
 
-URL With the Largest Word Count: http://www.ics.uci.edu/~eppstein/pubs/all.html with 20910 words 
+URL With the Largest Word Count: http://www.informatics.uci.edu/files/pdf/InformaticsBrochure-March2018 with 184164 words 
 
 50 Most Common Words:
-	1. ics : 4029 
-	2. bren : 2995 
-	3. support : 2799 
-	4. school : 2697 
-	5. computing : 2455 
-	6. uci : 2326 
-	7. research : 2087 
-	8. computer : 2027 
-	9. information : 1701 
-	10. policies : 1420 
-	11. deliveries : 1234 
-	12. edu : 1230 
-	13. science : 1150 
-	14. helpdesk : 1109 
-	15. baldi : 1103 
-	16. academic : 1061 
-	17. contact : 1058 
-	18. can : 1011 
-	19. irvine : 1010 
-	20. faculty : 951 
-	21. eppstein : 947 
-	22. data : 905 
-	23. email : 852 
-	24. students : 831 
-	25. donald : 830 
-	26. university : 818 
-	27. graph : 817 
-	28. systems : 800 
-	29. graduate : 797 
-	30. algorithms : 790 
-	31. student : 763 
-	32. events : 757 
-	33. learning : 745 
-	34. engineering : 733 
-	35. hans : 727 
-	36. time : 717 
-	37. one : 686 
-	38. group : 671 
-	39. will : 638 
-	40. may : 637 
-	41. sciences : 629 
-	42. software : 625 
-	43. problem : 624 
-	44. using : 618 
-	45. please : 614 
-	46. us : 613 
-	47. pp : 588 
-	48. show : 585 
-	49. publications : 577 
-	50. cs : 569 
+	1. will : 61486 
+	2. data : 59161 
+	3. uci : 54901 
+	4. ics : 52545 
+	5. research : 50683 
+	6. pdf : 45321 
+	7. students : 44985 
+	8. ago : 43432 
+	9. added : 43110 
+	10. years : 39018 
+	11. computer : 38208 
+	12. course : 32859 
+	13. student : 32144 
+	14. kb : 30014 
+	15. policies : 29321 
+	16. news : 29005 
+	17. information : 28681 
+	18. project : 27889 
+	19. science : 27134 
+	20. school : 26337 
+	21. academic : 25162 
+	22. bren : 25046 
+	23. time : 23115 
+	24. can : 23085 
+	25. graduate : 22984 
+	26. https : 22391 
+	27. edu : 22245 
+	28. markellekelly : 22131 
+	29. lecture : 21958 
+	30. undergraduate : 21824 
+	31. policy : 20512 
+	32. learning : 20415 
+	33. class : 19868 
+	34. contact : 19063 
+	35. software : 18957 
+	36. br : 18707 
+	37. use : 18545 
+	38. systems : 18165 
+	39. projects : 17990 
+	40. homework : 17905 
+	41. informatics : 17703 
+	42. events : 17442 
+	43. faculty : 17170 
+	44. may : 17075 
+	45. us : 17048 
+	46. pm : 16252 
+	47. database : 15950 
+	48. mjcarey : 15594 
+	49. piazza : 15546 
+	50. html : 15504 
 
-Number of subdomains in the ics.uci.edu domain: 13 
+Number of subdomains in the ics.uci.edu domain: 69 
 Subdomains List: 
-	1. cdb.ics.uci.edu, 11
-	2. chemdb.ics.uci.edu, 1
-	3. circadiomics.ics.uci.edu, 4
-	4. cml.ics.uci.edu, 2
-	5. cs.ics.uci.edu, 23
-	6. graphmod.ics.uci.edu, 1
-	7. mcs.ics.uci.edu, 1
-	8. mhcid.ics.uci.edu, 8
-	9. mlphysics.ics.uci.edu, 1
-	10. ngs.ics.uci.edu, 1
-	11. scratch.proteomics.ics.uci.edu, 1
-	12. sli.ics.uci.edu, 7
-	13. swiki.ics.uci.edu, 130
+	1. acoi.ics.uci.edu, 50
+	2. aiclub.ics.uci.edu, 2
+	3. archive.ics.uci.edu, 710
+	4. asterix.ics.uci.edu, 6
+	5. biaslab.ics.uci.edu, 4
+	6. cbcl.ics.uci.edu, 17
+	7. cdb.ics.uci.edu, 11
+	8. cert.ics.uci.edu, 5
+	9. chemdb.ics.uci.edu, 1
+	10. chenli.ics.uci.edu, 8
+	11. circadiomics.ics.uci.edu, 4
+	12. cml.ics.uci.edu, 10
+	13. code.ics.uci.edu, 10
+	14. computableplant.ics.uci.edu, 8
+	15. create.ics.uci.edu, 4
+	16. cs.ics.uci.edu, 49
+	17. cyberclub.ics.uci.edu, 2
+	18. datalab.ics.uci.edu, 1
+	19. dejavu.ics.uci.edu, 1
+	20. dgillen.ics.uci.edu, 6
+	21. duttgroup.ics.uci.edu, 28
+	22. dynamo.ics.uci.edu, 1
+	23. emj.ics.uci.edu, 19
+	24. evoke.ics.uci.edu, 3
+	25. flamingo.ics.uci.edu, 4
+	26. fr.ics.uci.edu, 2
+	27. futurehealth.ics.uci.edu, 71
+	28. grape.ics.uci.edu, 2829
+	29. graphmod.ics.uci.edu, 1
+	30. hai.ics.uci.edu, 5
+	31. hpi.ics.uci.edu, 2
+	32. iasl.ics.uci.edu, 13
+	33. industryshowcase.ics.uci.edu, 1
+	34. informatics.ics.uci.edu, 2
+	35. ipf.ics.uci.edu, 1
+	36. ipubmed.ics.uci.edu, 1
+	37. isg.ics.uci.edu, 115
+	38. mcs.ics.uci.edu, 16
+	39. mds.ics.uci.edu, 7
+	40. mhcid.ics.uci.edu, 9
+	41. mlphysics.ics.uci.edu, 1
+	42. mondego.ics.uci.edu, 3
+	43. motifmap.ics.uci.edu, 2
+	44. mse.ics.uci.edu, 3
+	45. mswe.ics.uci.edu, 6
+	46. ngs.ics.uci.edu, 130
+	47. oai.ics.uci.edu, 1
+	48. perennialpolycultures.ics.uci.edu, 1
+	49. plrg.ics.uci.edu, 12
+	50. radicle.ics.uci.edu, 2
+	51. redmiles.ics.uci.edu, 4
+	52. riscit.ics.uci.edu, 3
+	53. scale.ics.uci.edu, 3
+	54. scratch.proteomics.ics.uci.edu, 1
+	55. sdcl.ics.uci.edu, 22
+	56. seal.ics.uci.edu, 1
+	57. sherlock.ics.uci.edu, 4
+	58. sli.ics.uci.edu, 8
+	59. sourcerer.ics.uci.edu, 1
+	60. statconsulting.ics.uci.edu, 3
+	61. summeracademy.ics.uci.edu, 3
+	62. swiki.ics.uci.edu, 1
+	63. tastier.ics.uci.edu, 1
+	64. transformativeplay.ics.uci.edu, 14
+	65. unite.ics.uci.edu, 3
+	66. vision.ics.uci.edu, 1
+	67. wearablegames.ics.uci.edu, 8
+	68. wics.ics.uci.edu, 190
+	69. www-db.ics.uci.edu, 4

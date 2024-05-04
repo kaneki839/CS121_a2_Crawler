@@ -137,7 +137,7 @@ def is_valid(url):
         print("pass path")
 
         # Filter urls that include date (lots of urls with date are "no real data")。
-        if not contains_date_pattern:
+        if contains_date_pattern:
             return False
         print("pass date")
 
