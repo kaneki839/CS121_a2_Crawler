@@ -23,8 +23,8 @@ stop_words = ['a', 'about', 'above', 'after', 'again', 'against', 'all', 'am', '
 visited_unique_pages = {} # key: hash of the content, val: url itself
 max_tokens = 0  # words that longest page contains
 longest_page_url = "" 
-word_freqs = defaultdict(int)  # frequencies of all words
-links_in_domain = defaultdict(set)  # all the links in the ics.uci.edu domain
+word_freqs = defaultdict(int)  # key: the word, value: freqs
+links_in_domain = defaultdict(set)  # all the links in the ics.uci.edu domain / key: host name of url, val: url in under this host name (domain)
 
 robots_list = {}  # store robots rules that have been read; prevent reading robots.txt repeatly
 
@@ -141,7 +141,7 @@ def is_valid(url):
             return False
         print("pass date")
 
-        # Filter urls with more than 15 query parameters
+        # Filter urls with more than 3 query parameters
         query_params = parse_qs(parsed.query, keep_blank_values=True)
         if len(query_params) > 3:
             return False
